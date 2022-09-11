@@ -26,10 +26,10 @@ const activate = (context) => {
 		const getLineType = (line) => {
 			const typesMap = {
 				[LINE_TYPES.Core]: /(from|import) ('react'|'react-native'|'vue')/g,
-				[LINE_TYPES.Libs]: /(from|import) '\w/g,
-				[LINE_TYPES.GlobalComponents]: /(from|import) '~\/components/ig,
+				[LINE_TYPES.Libs]: /(from|import) '@?\w/g,
+				[LINE_TYPES.GlobalComponents]: /(from|import) '(~|@)\/components/ig,
 				[LINE_TYPES.LocalComponents]: /(from|import) '.\/components/ig,
-				[LINE_TYPES.General]: /(from|import) '(~|.|@)\//g,
+				[LINE_TYPES.General]: /(from|import) '(~|.|@)\/?/g,
 			};
 
 			return (Object.entries(typesMap)
@@ -67,7 +67,7 @@ const activate = (context) => {
 		});
 		
 		const categorizedGeneral = generalGroup.reduce((groups, line) => {
-			const groupName = line.match(/(@|~|\.)\/([\w-]+)/)[2];
+			const groupName = line.match(/(@|~|\.)\/?([\w-]+)/)[2];
 
 			if (groups[groupName]) groups[groupName].push(line);
 			else groups[groupName] = [line];
