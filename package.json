@@ -1,0 +1,56 @@
+{
+  "name": "imports-sorter",
+  "displayName": "Imports Sorter",
+  "version": "0.0.1",
+  "publisher": "glhrmoura",
+  "description": "Extension for Visual Studio Code that helps organize imports by sorting them based on their source folder.",
+  "engines": {
+    "vscode": "^1.71.0"
+  },
+  "categories": [
+    "Formatters"
+  ],
+  "keywords": [
+    "import", "formatter", "javascript", "react", "react-native", "vue"
+  ],
+  "author": {
+    "name": "Guilherme Moura <glhrmoura@gmail.com>"
+  },
+  "activationEvents": [
+    "onCommand:importsSorter.sort"
+  ],
+  "icon": "src/images/icon.png",
+  "main": "./src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/glhrmoura/imports-sorter.git"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "title": "Sort imports",
+        "command": "importsSorter.sort"
+      }
+    ]
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "yarn run lint",
+    "test": "node ./test/runTest.js",
+    "ext:publish": "vsce publish",
+    "ext:unpublish": "vsce unpublish",
+    "ext:package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.71.0",
+    "@vscode/test-electron": "^2.1.5",
+    "eslint": "^8.20.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "typescript": "^4.7.4",
+    "vsce": "^2.11.0"
+  }
+}
