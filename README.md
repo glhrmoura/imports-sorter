@@ -1,5 +1,8 @@
 <p align="center">
-  <img style="object: contain; height: 150px" alt="RapidAPI" src="https://raw.githubusercontent.com/glhrmoura/imports-sorter/main/src/images/icon.png">
+  <img
+    style="object: contain; height: 150px"
+    src="https://raw.githubusercontent.com/glhrmoura/imports-sorter/main/src/images/icon.png"
+  />
 </p>
 
 # :package: Imports Sorter
@@ -45,3 +48,9 @@ Block dedicated to imported local components, which are acquired from a folder a
 <p align="center">
   <img src="https://github.com/glhrmoura/imports-sorter/raw/main/src/docs/overview.gif" />
 </p>
+
+## License
+
+[MIT](https://github.com/glhrmoura/offices/blob/main/LICENSE)
+
+Copyright (c) Guilherme Moura
