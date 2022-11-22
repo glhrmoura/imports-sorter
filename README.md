@@ -51,6 +51,6 @@ Block dedicated to imported local components, which are acquired from a folder a
 
 ## License
 
-[MIT](https://github.com/glhrmoura/offices/blob/main/LICENSE)
+[MIT](https://github.com/glhrmoura/imports-sorter/blob/main/LICENSE)
 
 Copyright (c) Guilherme Moura
