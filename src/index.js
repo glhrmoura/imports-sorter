@@ -14,6 +14,7 @@ const activate = (context) => {
 		const generalGroup = [];
 		const globalComponentsBlock = [];
 		const localComponentsBlock = [];
+		const unknownBlock = [];
 
 		const LINE_TYPES = {
 			Core: '1',
@@ -29,7 +30,7 @@ const activate = (context) => {
 				[LINE_TYPES.Libs]: /(from|import) '@?\w/g,
 				[LINE_TYPES.GlobalComponents]: /(from|import) '(~|@)\/components/ig,
 				[LINE_TYPES.LocalComponents]: /(from|import) '.\/components/ig,
-				[LINE_TYPES.General]: /(from|import) '(~|.|@)\//g,
+				[LINE_TYPES.General]: /(from|import) '((~|.+|@)\/)+/g,
 			};
 
 			return (Object.entries(typesMap)
@@ -44,24 +45,31 @@ const activate = (context) => {
 				.join('');
 		};
 
+		const addLine = (line, block) => {
+			if (block.includes(line)) return;
+
+			block.push(line);
+		};
+
 		lines.forEach((line) => {
 			switch (getLineType(line)) {
 				case LINE_TYPES.Core:
-					coreBlock.push(line);
+					addLine(line, coreBlock);
 					break;
 				case LINE_TYPES.Libs:
-					libsBlock.push(line);
+					addLine(line, libsBlock);
 					break;
 				case LINE_TYPES.GlobalComponents:
-					globalComponentsBlock.push(line);
+					addLine(line, globalComponentsBlock);
 					break;
 				case LINE_TYPES.LocalComponents:
-					localComponentsBlock.push(line);
+					addLine(line, localComponentsBlock);
 					break;
 				case LINE_TYPES.General:
-					generalGroup.push(line);
+					addLine(line, generalGroup);
 					break;
 				default:
+					addLine(line, unknownBlock);
 					break;
 			}
 		});
@@ -78,6 +86,8 @@ const activate = (context) => {
 		const generalBlocks = Object.entries(categorizedGeneral)
 			.sort(([keyA], [keyB]) => keyA > keyB ? 1 : -1)
 			.map(([, block]) => block)
+		
+		const cleanedUnknownBlock = unknownBlock.filter(Boolean);
 
 		const importBlocks = [
 			getBlockString(coreBlock),
@@ -85,6 +95,7 @@ const activate = (context) => {
 			...generalBlocks.map(getBlockString),
 			getBlockString(globalComponentsBlock),
 			getBlockString(localComponentsBlock),
+			getBlockString(cleanedUnknownBlock),
 		].filter(Boolean).join('\n').replace(/\n+$/, '');
 
 		editor.edit(editBuilder => {
