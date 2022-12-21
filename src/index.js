@@ -7,7 +7,7 @@ const activate = (context) => {
 		if (!editor) return;
 
 		const selectedText = editor.document.getText(editor.selection);
-		const lines = selectedText.split(/;|'$/);
+		const lines = selectedText.split(/;/);
 
 		const coreBlock = [];
 		const libsBlock = [];
@@ -26,11 +26,11 @@ const activate = (context) => {
 
 		const getLineType = (line) => {
 			const typesMap = {
-				[LINE_TYPES.Core]: /(from|import) ('react'|'react-native'|'vue')/g,
-				[LINE_TYPES.Libs]: /(from|import) '@?\w/g,
-				[LINE_TYPES.GlobalComponents]: /(from|import) '(~|@)\/components/ig,
-				[LINE_TYPES.LocalComponents]: /(from|import) '.\/components/ig,
-				[LINE_TYPES.General]: /(from|import) '((~|.+|@)\/)+/g,
+				[LINE_TYPES.Core]: /(from|import) (('|")react('|")|('|")react-native('|")|('|")vue('|"))/g,
+				[LINE_TYPES.Libs]: /(from|import) ('|")@?\w/g,
+				[LINE_TYPES.GlobalComponents]: /(from|import) ('|")(~|@)\/components/ig,
+				[LINE_TYPES.LocalComponents]: /(from|import) ('|").\/components/ig,
+				[LINE_TYPES.General]: /(from|import) ('|")((~|.+|@)\/)+/g,
 			};
 
 			return (Object.entries(typesMap)
@@ -39,14 +39,16 @@ const activate = (context) => {
 
 		const getBlockString = (block) => {
 			return block
-				.map((line) => /'(\n|$)/.test(line) ? `${line};` : `${line}';`)
+				.map((line) => line.includes(';') ? line : `${line};`)
 				.map((line) => `${line.replace(/^[\r\n]+|[\r\n]+$/g, '')}\n`)
 				.sort((a, b) => a.length - b.length)
 				.join('');
 		};
 
 		const addLine = (line, block) => {
-			if (block.includes(line)) return;
+			if (!line ||/^\n?\s+\n?$/.test(line) || block.includes(line)) {
+				return;
+			}
 
 			block.push(line);
 		};
@@ -75,7 +77,7 @@ const activate = (context) => {
 		});
 		
 		const categorizedGeneral = generalGroup.reduce((groups, line) => {
-			const groupName = line.match(/(@|~|\.)\/([\w-]+)/)[2];
+			const groupName = line.match(/(@|~|\.+)?\/([\w-]+)/)?.[2];
 
 			if (groups[groupName]) groups[groupName].push(line);
 			else groups[groupName] = [line];
@@ -87,20 +89,18 @@ const activate = (context) => {
 			.sort(([keyA], [keyB]) => keyA > keyB ? 1 : -1)
 			.map(([, block]) => block)
 		
-		const cleanedUnknownBlock = unknownBlock.filter(Boolean);
-
 		const importBlocks = [
 			getBlockString(coreBlock),
 			getBlockString(libsBlock),
 			...generalBlocks.map(getBlockString),
 			getBlockString(globalComponentsBlock),
 			getBlockString(localComponentsBlock),
-			getBlockString(cleanedUnknownBlock),
-		].filter(Boolean).join('\n').replace(/\n+$/, '');
+			getBlockString(unknownBlock),
+		]
+		.join('\n')
+		.replace(/\n+$/, '');
 
-		editor.edit(editBuilder => {
-			editBuilder.replace(editor.selection, importBlocks);
-		});
+		editor.edit(editBuilder => editBuilder.replace(editor.selection, importBlocks));
 	});
 
 	context.subscriptions.push(command);
