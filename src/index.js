@@ -77,7 +77,7 @@ const activate = (context) => {
 		});
 		
 		const categorizedGeneral = generalGroup.reduce((groups, line) => {
-			const groupName = line.match(/(@|~|\.+)?\/([\w-]+)/)?.[2];
+			const groupName = line.match(/(@|~|\.+)?\/([\w-]+)/)[2];
 
 			if (groups[groupName]) groups[groupName].push(line);
 			else groups[groupName] = [line];
