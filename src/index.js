@@ -7,7 +7,8 @@ const activate = (context) => {
 		if (!editor) return;
 
 		const selectedText = editor.document.getText(editor.selection);
-		const lines = selectedText.split(/;/);
+		const lines = selectedText.split(/;|(?<='|")\r\n/);
+		const withFinalBreakLine = selectedText.endsWith('\n');
 
 		const coreBlock = [];
 		const libsBlock = [];
@@ -39,7 +40,7 @@ const activate = (context) => {
 
 		const getBlockString = (block) => {
 			return block
-				.map((line) => line.includes(';') ? line : `${line};`)
+				.map((line) => `${line};`)
 				.map((line) => `${line.replace(/^[\r\n]+|[\r\n]+$/g, '')}\n`)
 				.sort((a, b) => a.length - b.length)
 				.join('');
@@ -75,9 +76,9 @@ const activate = (context) => {
 					break;
 			}
 		});
-		
+
 		const categorizedGeneral = generalGroup.reduce((groups, line) => {
-			const groupName = line.match(/(@|~|\.+)?\/([\w-]+)/)[2];
+			const groupName = line.match(/((@|~|\.+)?\/)+([\w-]+)/)[3];
 
 			if (groups[groupName]) groups[groupName].push(line);
 			else groups[groupName] = [line];
@@ -97,10 +98,18 @@ const activate = (context) => {
 			getBlockString(localComponentsBlock),
 			getBlockString(unknownBlock),
 		]
-		.join('\n')
-		.replace(/\n+$/, '');
 
-		editor.edit(editBuilder => editBuilder.replace(editor.selection, importBlocks));
+		const importsBlockStr = importBlocks
+			.filter(Boolean)
+			.join('\n')
+			.replace(/\n+$/, '')
+
+		editor.edit(editBuilder => {
+			editBuilder.replace(
+				editor.selection,
+				importsBlockStr.concat(withFinalBreakLine ? '\n' : ''),
+			);
+		});
 	});
 
 	context.subscriptions.push(command);
