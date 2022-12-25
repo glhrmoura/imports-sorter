@@ -25,7 +25,6 @@ const activate = (context) => {
 			General: '5',
 		};
 
-		
 		const removeBreakLines = (text) => text.replace(/[\r\n]+/g, '');
 
 		const getLineType = (line) => {
