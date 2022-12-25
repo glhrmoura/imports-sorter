@@ -7,7 +7,7 @@ const activate = (context) => {
 		if (!editor) return;
 
 		const selectedText = editor.document.getText(editor.selection);
-		const lines = selectedText.split(/;|(?<='|")\r\n/);
+		const lines = selectedText.split(/;|['"]\r\n/);
 		const withFinalBreakLine = selectedText.endsWith('\n');
 
 		const coreBlock = [];
@@ -35,12 +35,17 @@ const activate = (context) => {
 			};
 
 			return (Object.entries(typesMap)
+				.filter(Boolean)
 				.find(([, value]) => line.match(value)) || [])[0];
 		};
 
 		const getBlockString = (block) => {
 			return block
-				.map((line) => `${line};`)
+				.map((line) => {
+					const quot = line.includes('\'') ? '\'' : '"';
+
+					return line.endsWith(quot) ? `${line};` : `${line}${quot};`
+				})
 				.map((line) => `${line.replace(/^[\r\n]+|[\r\n]+$/g, '')}\n`)
 				.sort((a, b) => a.length - b.length)
 				.join('');
