@@ -9,39 +9,9 @@
 
 Extension for Visual Studio Code that helps organize imports by sorting them based on their source folder.
 
-## Classification rules
+## Chrome Web Store
 
-The extension uses a block-based classification system. In order, the blocks are:
-
-### Core
-
-**Description:** Block dedicated to the core libraries of the project.
-
-**Examples:** react, vue, react native.
-
-### Libraries
-
-**Description:** Block dedicated to third-party libraries.
-
-**Examples:** redux, vuex, enzyme, styled-components.
-
-### General
-
-**Description:** Block dedicated to the general (non-component) imports of the project.
-
-**Examples:** services, constants, helpers.
-
-### Global components
-
-**Description:** Block dedicated to imported global components, which are acquired from the project root.
-
-**Examples:** ~/components, @/components.
-
-### Local components
-
-**Description:** Block dedicated to imported local components, which are acquired from a folder at the same level as the requesting file.
-
-**Example:** ./components.
+[**Imports Sorter**](https://marketplace.visualstudio.com/items?itemName=glhrmoura.imports-sorter)
 
 ## Overview
 
