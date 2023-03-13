@@ -9,7 +9,7 @@
 
 Extension for Visual Studio Code that helps organize imports by sorting them based on their source folder.
 
-## Chrome Web Store
+## Visual Studio Marketplace
 
 [**Imports Sorter**](https://marketplace.visualstudio.com/items?itemName=glhrmoura.imports-sorter)
 
