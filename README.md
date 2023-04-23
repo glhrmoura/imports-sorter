@@ -9,17 +9,17 @@
 
 Extension for Visual Studio Code that helps organize imports by sorting them based on their source folder.
 
-## Visual Studio Marketplace
+### Visual Studio Marketplace
 
 [**Imports Sorter**](https://marketplace.visualstudio.com/items?itemName=glhrmoura.imports-sorter)
 
-## Overview
+### Overview
 
 <p align="center">
   <img src="https://github.com/glhrmoura/imports-sorter/raw/main/src/docs/overview.gif" />
 </p>
 
-## License
+### License
 
 [MIT](https://github.com/glhrmoura/imports-sorter/blob/main/LICENSE)
 
