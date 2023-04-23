@@ -5,7 +5,7 @@
   />
 </p>
 
-# Imports Sorter
+## Imports Sorter
 
 Extension for Visual Studio Code that helps organize imports by sorting them based on their source folder.
 
