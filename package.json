@@ -1,7 +1,7 @@
 {
   "name": "imports-sorter",
   "displayName": "Imports Sorter",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "glhrmoura",
   "description": "Extension for Visual Studio Code that helps organize imports by sorting them based on their source folder.",
   "engines": {
@@ -11,7 +11,12 @@
     "Formatters"
   ],
   "keywords": [
-    "import", "formatter", "javascript", "react", "react-native", "vue"
+    "import",
+    "formatter",
+    "javascript",
+    "react",
+    "react-native",
+    "vue"
   ],
   "author": {
     "name": "Guilherme Moura <glhrmoura@gmail.com>"
