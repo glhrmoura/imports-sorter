@@ -1,25 +1,24 @@
 {
-	"env": {
-		"browser": false,
-		"commonjs": true,
-		"es6": true,
-		"node": true,
-		"mocha": true
-	},
-	"parserOptions": {
-		"ecmaVersion": 2022,
-		"ecmaFeatures": {
-			"jsx": true
-		},
-		"sourceType": "module"
-	},
-	"rules": {
-		"no-const-assign": "warn",
-		"no-this-before-super": "warn",
-		"no-undef": "warn",
-		"no-unreachable": "warn",
-		"no-unused-vars": "warn",
-		"constructor-super": "warn",
-		"valid-typeof": "warn"
-	}
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-var": "error",
+    "semi": ["error", "always"],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-var-requires": "off"
+  }
 }

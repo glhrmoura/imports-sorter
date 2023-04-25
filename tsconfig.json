@@ -1,13 +1,11 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "ES2020",
-		"allowSyntheticDefaultImports": true,
-		"lib": [
-			"ES2020"
-		]
-	},
-	"exclude": [
-		"node_modules"
-	]
+  "compilerOptions": {
+    "module": "commonjs"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

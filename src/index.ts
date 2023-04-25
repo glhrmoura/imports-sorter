@@ -1,139 +1,145 @@
 const vscode = require('vscode');
 
 enum LineTypes {
-	Core,
-	Libs,
-	GlobalComponents,
-	LocalComponents,
-	General,
+  Core,
+  Libs,
+  GlobalComponents,
+  LocalComponents,
+  General,
 }
 
 const activate = (context) => {
-	const command = vscode.commands.registerCommand('importsSorter.sort', () => {
-		const editor = vscode.window.activeTextEditor;
+  const command = vscode.commands.registerCommand('importsSorter.sort', () => {
+    const editor = vscode.window.activeTextEditor;
 
-		if (!editor) return;
+    if (!editor) return;
 
-		const selectedText: string = editor.document.getText(editor.selection);
-		const lines: string[] = selectedText.split(/;|(?<=['"])\r?\n/);
-		const withFinalBreakLine: boolean = selectedText.endsWith('\n');
+    const selectedText: string = editor.document.getText(editor.selection);
+    const lines: string[] = selectedText.split(/;|(?<=['"])\r?\n/);
+    const withFinalBreakLine: boolean = selectedText.endsWith('\n');
 
-		const coreBlock = [];
-		const libsBlock = [];
-		const generalGroup = [];
-		const globalComponentsBlock = [];
-		const localComponentsBlock = [];
-		const unknownBlock = [];
+    const coreBlock = [];
+    const libsBlock = [];
+    const generalGroup = [];
+    const globalComponentsBlock = [];
+    const localComponentsBlock = [];
+    const unknownBlock = [];
 
-		const removeBreakLines = (text) => text.replace(/[\r\n]+/g, '');
+    const removeBreakLines = (text) => text.replace(/[\r\n]+/g, '');
 
-		const getLineType = (line: string) => {
-			let matched: LineTypes;
+    const getLineType = (line: string) => {
+      let matched: LineTypes;
 
-			const types = new Map([
-				[LineTypes.Core, /(from|import) (('|")react('|")|('|")react-native('|")|('|")vue('|"))/g],
-				[LineTypes.Libs, /(from|import) ('|")@?\w/g],
-				[LineTypes.GlobalComponents, /(from|import) ('|")(~|@)\/components/ig],
-				[LineTypes.LocalComponents, /(from|import) ('|").\/components/ig],
-				[LineTypes.General, /(from|import) ('|")((~|.+|@)\/)+/g],
-			]);
+      const types = new Map([
+        [LineTypes.Core, /(from|import) (('|")react('|")|('|")react-native('|")|('|")vue('|"))/g],
+        [LineTypes.Libs, /(from|import) ('|")@?\w/g],
+        [LineTypes.GlobalComponents, /(from|import) ('|")(~|@)\/components/ig],
+        [LineTypes.LocalComponents, /(from|import) ('|").\/components/ig],
+        [LineTypes.General, /(from|import) ('|")((~|.+|@)\/)+/g],
+      ]);
 
-			types.forEach((value, key) => {
-				if (matched in LineTypes) return;
+      types.forEach((value, key) => {
+        if (matched in LineTypes) return;
 
-				if (line.match(value)) {
-					matched = key;
-				}
-			});
+        if (line.match(value)) {
+          matched = key;
+        }
+      });
 
-			return matched;
-		};
+      return matched;
+    };
 
-		const getBlockString = (block: string[]) => {
-			return block
-				.map((line) => `${line};`)
-				.map((line) => `${line.replace(/^[\r\n]+|[\r\n]+$/g, '')}\n`)
-				.sort((a, b) => a.length - b.length)
-				.join('');
-		};
+    const getBlockString = (block: string[]) => {
+      return block
+        .map((line) => `${line};`)
+        .map((line) => `${line.replace(/^[\r\n]+|[\r\n]+$/g, '')}\n`)
+        .sort((a, b) => a.length - b.length)
+        .join('');
+    };
 
-		const addLine = (newLine: string, block: string[]) => {
-			const invalidLine = !newLine || /^\n?\s+\n?$/.test(newLine);
-			const lineAlreadyExists = block.some((line) => removeBreakLines(newLine) === removeBreakLines(line));
+    const addLine = (newLine: string, block: string[]) => {
+      const invalidLine = !newLine || /^\n?\s+\n?$/.test(newLine);
+      const lineAlreadyExists = block.some((line) => removeBreakLines(newLine) === removeBreakLines(line));
 
-			if (invalidLine || lineAlreadyExists) return;
+      if (invalidLine || lineAlreadyExists) return;
 
-			block.push(newLine);
-		};
+      block.push(newLine);
+    };
 
-		lines.forEach((line: string) => {
-			switch (getLineType(line)) {
-				case LineTypes.Core:
-					addLine(line, coreBlock);
-					break;
-				case LineTypes.Libs:
-					addLine(line, libsBlock);
-					break;
-				case LineTypes.GlobalComponents:
-					addLine(line, globalComponentsBlock);
-					break;
-				case LineTypes.LocalComponents:
-					addLine(line, localComponentsBlock);
-					break;
-				case LineTypes.General:
-					addLine(line, generalGroup);
-					break;
-				default:
-					addLine(line, unknownBlock);
-					break;
-			}
-		});
+    lines.forEach((line: string) => {
+      switch (getLineType(line)) {
+        case LineTypes.Core:
+          addLine(line, coreBlock);
+          
+          break;
+        case LineTypes.Libs:
+          addLine(line, libsBlock);
+          
+          break;
+        case LineTypes.GlobalComponents:
+          addLine(line, globalComponentsBlock);
+          
+          break;
+        case LineTypes.LocalComponents:
+          addLine(line, localComponentsBlock);
+          
+          break;
+        case LineTypes.General:
+          addLine(line, generalGroup);
+          
+          break;
+        default:
+          addLine(line, unknownBlock);
+          
+          break;
+      }
+    });
 
-		const categorizedGeneral = generalGroup.reduce((groups, line) => {
-			const samePath = /\.\//g.test(line);
-			const justAFolder = line.match(/\//g)?.length === 1;
-			const groupName = (samePath && justAFolder)
-				? 'samePath'
-				: line.match(/((@|~|\.+)?\/)+([\w-]+)/)[3];
+    const categorizedGeneral = generalGroup.reduce((groups, line) => {
+      const samePath = /\.\//g.test(line);
+      const justAFolder = line.match(/\//g)?.length === 1;
+      const groupName = (samePath && justAFolder)
+        ? 'samePath'
+        : line.match(/((@|~|\.+)?\/)+([\w-]+)/)[3];
 
-			if (groups[groupName]) groups[groupName].push(line);
-			else groups[groupName] = [line];
+      if (groups[groupName]) groups[groupName].push(line);
+      else groups[groupName] = [line];
 
-			return groups;
-		}, {});
+      return groups;
+    }, {});
 
-		const generalBlocks = Object.entries(categorizedGeneral)
-			.sort(([keyA], [keyB]) => keyA > keyB ? 1 : -1)
-			.map(([, block]) => block)
-		
-		const importBlocks = [
-			getBlockString(coreBlock),
-			getBlockString(libsBlock),
-			...generalBlocks.map(getBlockString),
-			getBlockString(globalComponentsBlock),
-			getBlockString(localComponentsBlock),
-			getBlockString(unknownBlock),
-		]
+    const generalBlocks = Object.entries(categorizedGeneral)
+      .sort(([keyA], [keyB]) => keyA > keyB ? 1 : -1)
+      .map(([, block]) => block);
 
-		const importsBlockStr = importBlocks
-			.filter(Boolean)
-			.join('\n')
-			.replace(/\n+$/, '')
+    const importBlocks = [
+      getBlockString(coreBlock),
+      getBlockString(libsBlock),
+      ...generalBlocks.map(getBlockString),
+      getBlockString(globalComponentsBlock),
+      getBlockString(localComponentsBlock),
+      getBlockString(unknownBlock),
+    ];
 
-		editor.edit(editBuilder => {
-			editBuilder.replace(
-				editor.selection,
-				importsBlockStr.concat(withFinalBreakLine ? '\n' : ''),
-			);
-		});
-	});
+    const importsBlockStr = importBlocks
+      .filter(Boolean)
+      .join('\n')
+      .replace(/\n+$/, '');
 
-	context.subscriptions.push(command);
+    editor.edit((editBuilder) => {
+      editBuilder.replace(
+        editor.selection,
+        importsBlockStr.concat(withFinalBreakLine ? '\n' : ''),
+      );
+    });
+  });
+
+  context.subscriptions.push(command);
 };
 
 const deactivate = () => {};
 
 module.exports = {
-	activate,
-	deactivate,
+  activate,
+  deactivate,
 };
