@@ -40,7 +40,6 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "pretest": "yarn run lint",
     "watch": "tsc -watch -p ./ --outDir ./dist"
   },
   "devDependencies": {
