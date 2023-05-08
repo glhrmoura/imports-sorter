@@ -7,6 +7,9 @@
 
 ## Imports Sorter
 
+[![Visual Studio Marketplace Rating (Stars)](https://img.shields.io/visual-studio-marketplace/stars/glhrmoura.imports-sorter.svg?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=glhrmoura.imports-sorter)
+[![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/glhrmoura.imports-sorter.svg?style=for-the-badge)](https://marketplace.visualstudio.com/items?itemName=glhrmoura.imports-sorter)
+
 Extension for Visual Studio Code that helps organize imports by sorting them based on their source folder.
 
 ### Visual Studio Marketplace
