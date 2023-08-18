@@ -17,7 +17,7 @@ Extension for Visual Studio Code that helps organize imports by sorting them bas
 
 [**Imports Sorter**](https://marketplace.visualstudio.com/items?itemName=glhrmoura.imports-sorter)
 
-### Overview
+### Demo
 
 <p align="center">
   <img src="https://github.com/glhrmoura/imports-sorter/raw/main/src/docs/overview.gif" />
