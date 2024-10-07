@@ -1,7 +1,7 @@
 <p align="center">
   <img
     style="object: contain; height: 150px"
-    src="https://raw.githubusercontent.com/glhrmoura/imports-sorter/main/src/images/icon.png"
+    src="https://i.imgur.com/R2l3UNC.png"
   />
 </p>
 
